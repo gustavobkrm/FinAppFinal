@@ -1,0 +1,96 @@
+package com.example.finappfinal
+
+import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+
+class ListStudentsByHouse : AppCompatActivity() {
+    private lateinit var progressBar: ProgressBar
+    private var harryPotterAPI: HarryPotterAPI? = null
+    private lateinit var characterRecyclerView: RecyclerView
+    private lateinit var characterAdapter: CharacterAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContentView(R.layout.activity_list_students_by_house)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+        progressBar = findViewById(R.id.progressBarStudentsByHouse)
+        progressBar.visibility = View.GONE
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://hp-api.onrender.com/api/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        harryPotterAPI = retrofit.create(HarryPotterAPI::class.java)
+        characterRecyclerView = findViewById(R.id.characterRecyclerView)
+        characterRecyclerView.layoutManager = LinearLayoutManager(this)
+        characterRecyclerView.setHasFixedSize(true)
+        characterRecyclerView.addItemDecoration(
+            DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        )
+
+        val radioGroup = findViewById<RadioGroup>(R.id.radioGroupId)
+
+        radioGroup.setOnCheckedChangeListener { _, checkedId ->
+            val radioButton = findViewById<RadioButton>(checkedId)
+            val house = radioButton.text.toString()
+            requestGetAllStudentsPerHouse(house)
+        }
+    }
+
+    private fun requestGetAllStudentsPerHouse(house: String) {
+        var convertedHouse = ""
+        if (house == "Grifinória") {
+            convertedHouse = "Gryffindor"
+        }
+        if (house == "Sonserina") {
+            convertedHouse = "Slytherin"
+        }
+        if (house == "Lufa Lufa") {
+            convertedHouse = "Hufflepuff"
+        }
+        if (house == "Corvinal") {
+            convertedHouse = "Ravenclaw"
+        }
+        lifecycleScope.launch() {
+            try {
+                progressBar.visibility = View.VISIBLE
+                val response = withContext(Dispatchers.IO) {
+                    harryPotterAPI?.getStudentsByHouse(convertedHouse)
+                }
+                progressBar.visibility = View.GONE
+
+                if (!response.isNullOrEmpty()) {
+                    characterAdapter = CharacterAdapter(response, this@ListStudentsByHouse){}
+                    characterRecyclerView.adapter = characterAdapter
+                }
+
+            } catch (e: Exception) {
+                Log.e("Error", e.toString())
+            }
+        }
+    }
+}

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ListStudentsByHouse">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/characterRecyclerView"
+        android:layout_width="374dp"
+        android:layout_height="642dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        tools:listitem="@layout/list_item" />
+
+    <ProgressBar
+        android:id="@+id/progressBarStudentsByHouse"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupId"
+        android:layout_width="401dp"
+        android:layout_height="204dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RadioButton
+            android:id="@+id/radioButtonLufa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lufa Lufa"
+            android:textSize="24sp" />
+
+        <RadioButton
+            android:id="@+id/radioButtonCorv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Corvinal"
+            android:textSize="24sp" />
+
+        <RadioButton
+            android:id="@+id/radioButtonSons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sonserina"
+            android:textSize="24sp" />
+
+        <RadioButton
+            android:id="@+id/radioButtonGrif"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Grifinória"
+            android:textSize="24sp" />
+    </RadioGroup>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
